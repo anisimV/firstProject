@@ -77,7 +77,7 @@ function saveMessage(): bool
 
     $res = $pdo->prepare("INSERT INTO messages (name, messages) VALUES (?,?)");
     if ($res->execute([$_SESSION['user']['name'], $message],)) {
-        $_SESSION['success'] = 'Отправлено';
+        $_SESSION['success'] = '';
         return true;
     } else {
         $_SESSION['errors'] = 'Ошибка';
