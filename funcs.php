@@ -1,6 +1,5 @@
 <?php 
 
-
 function registration(): bool
 {
     global $pdo;
@@ -29,4 +28,66 @@ function registration(): bool
         $_SESSION['errors'] = 'Ошибка регистрации';
         return false;
     }
+}
+
+function login(): bool 
+{
+    global $pdo;
+
+    $login = !empty($_POST['login']) ? trim($_POST['login']) : '';
+    $pass = !empty($_POST['pass']) ? trim($_POST['pass']) : '';
+
+    if (empty($login) || empty($pass)) {
+        $_SESSION['errors'] = 'Оба поля оязательны';
+        return false;
+    }
+
+    $res = $pdo->prepare("SELECT * FROM users WHERE login = ?");
+    $res ->execute([$login]);
+    if (!$user = $res->fetch()) {
+        $_SESSION['errors'] = 'Не верный логин или пароль';
+        return false;
+    }
+
+    if (!password_verify($pass, $user['pass'])) {
+        $_SESSION['errors'] = 'Не верный логин или пароль';
+        return false;
+    } else {
+        $_SESSION['success'] = '';
+        $_SESSION['user']['name'] = $user['login'];
+        $_SESSION['user']['id'] = $user['id'];
+        return true;
+    }
+}
+
+function saveMessage(): bool
+{
+    global $pdo;
+    $message = !empty($_POST['message']) ? trim($_POST['message']) : '';
+    
+    if (!isset($_SESSION['user']['name'])) {
+        $_SESSION['errors'] = 'Войдите';
+        return false;
+    }
+    
+    if (empty($message)) {
+        $_SESSION['errors'] = 'Введите сообщение';
+        return false;
+    }
+
+    $res = $pdo->prepare("INSERT INTO messages (name, messages) VALUES (?,?)");
+    if ($res->execute([$_SESSION['user']['name'], $message],)) {
+        $_SESSION['success'] = 'Отправлено';
+        return true;
+    } else {
+        $_SESSION['errors'] = 'Ошибка';
+        return false;
+    }
+}
+
+function getMessages(): array
+{
+    global $pdo;
+    $res = $pdo->query("SELECT * FROM messages");
+    return $res->fetchAll();
 }

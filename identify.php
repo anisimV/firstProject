@@ -11,6 +11,12 @@ if (isset($_POST['register'])) {
     die;
 }
 
+if (isset($_POST['auth'])) {
+    $url = login() ? '/index.php' : 'identify.php';
+    
+    header("Location: " . $url);
+    die();
+}
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +32,6 @@ if (isset($_POST['register'])) {
         <div class="container">
 
             <div class="aut">
-                
                 <div class="col">
                     <?php if (!empty($_SESSION['errors'])): ?>
                         <div class="errors">
@@ -35,6 +40,7 @@ if (isset($_POST['register'])) {
                                 unset($_SESSION['errors']);               
                             ?>
                         </div>
+
                     <?php endif; ?>
                     
                     <?php if (!empty($_SESSION['success'])): ?>
@@ -65,15 +71,15 @@ if (isset($_POST['register'])) {
                                 <a href="" class="btn-close closemodal" aria-hidden="true">&times;</a>
                             </div>
 
-                                <form action="index.php" method="post">
-                                    <div class="modal-body">
-                                        <input type="text" name="user" placeholder="Имя пользователя" size="20" /><br>
-                                        <input type="text" name="pass" placeholder="Пароль" size="20" />
-                                    </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" name="auth" class="goin">Авторизоваться </button>
-                                        </div>
-                                </form>
+                            <form action="identify.php" method="post">
+                                <div class="modal-body">
+                                    <input type="text" name="login" autocomplete="off" placeholder="Имя пользователя" size="20"/><br>
+                                    <input type="text" name="pass" autocomplete="off"placeholder="Пароль" size="20" />
+                                </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" name="auth" class="goin">Авторизоваться </button>
+                                </div>
+                            </form>
                                 
                         </div>
                     </div>
@@ -87,23 +93,20 @@ if (isset($_POST['register'])) {
                                 <a href="" class="btn-close closemodall" aria-hidden="true">&times;</a>
                             </div>
 
-                                <form action="identify.php" method="post">
-                                    <div class="modal-body">
-                                        <input type="text" name="login" placeholder="Имя пользователя" size="20" /><br>
-                                        <input type="password" name="pass" placeholder="Пароль" size="20" />
-                                    </div>
+                            <form action="identify.php" method="post">
+                                <div class="modal-body">
+                                    <input type="text" name="login" autocomplete="off" placeholder="Имя пользователя" size="20"/><br>
+                                    <input type="password" name="pass" autocomplete="off" placeholder="Пароль" size="20"/>
+                                </div>
 
-                                    <div class="modal-footer">
+                                <div class="modal-footer">
                                         <button type="submit" name="register" class="goin">Регистрация</button>
-                                    </div>
-                                </form>
+                                </div>
+                            </form>
                                 
                         </div>
                     </div>
                 </div>
-                
-
-            
         </div>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script  src="/js/jQuery.js"></script>
